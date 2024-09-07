@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Colorado Citizens Project - Report Damaged Road{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="bg-gray-100">
+    <header class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Colorado Citizens Project - Report Damaged Road</h1>
+            <nav>
+                <a href="{{ url_for('index') }}" class="hover:underline mr-4">Home</a>
+                <a href="{{ url_for('about') }}" class="hover:underline mr-4">About</a>
+                <a href="{{ url_for('donate') }}" class="hover:underline mr-4">Donate</a>
+                <a href="{{ url_for('contact') }}" class="hover:underline">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto mt-8 px-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-gray-200 text-center p-4 mt-8">
+        <p>&copy; 2024 Colorado Citizens for Better Roads. All rights reserved. Design and Development by <a href="https://www.ablaka.com" target="_blank" class="text-blue-600 hover:underline">Ablaka Digital Agency</a></p>
+    </footer>
+
+    <div class="loading-popup">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <img src="{{ url_for('static', filename='uploads/' + submission.photo) }}" alt="Road Damage" class="w-full h-64 object-cover">
+    <div class="p-6">
+        <h2 class="text-2xl font-bold mb-2">Damage Report</h2>
+        <p class="text-gray-600 mb-2">Location: {{ submission.location }}</p>
+        <p class="text-sm text-gray-500 mb-4">Reported on: {{ submission.created_at.strftime('%Y-%m-%d %I:%M:%S %p') }} MST</p>
+        
+        <h3 class="text-xl font-bold mb-2">Comments</h3>
+        <div id="comments-container">
+            {% for comment in submission.comments %}
+            <div class="bg-gray-100 p-3 rounded mb-2">
+                <p>{{ comment.content }}</p>
+                <p class="text-sm text-gray-500">{{ comment.created_at.strftime('%Y-%m-%d %I:%M:%S %p') }} MST</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <form id="comment-form" class="mt-4">
+            <input type="hidden" name="submission_id" value="{{ submission.id }}">
+            <textarea name="content" rows="3" class="w-full px-3 py-2 border rounded-lg" placeholder="Add a comment..." required></textarea>
+            <button type="submit" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Post Comment</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
