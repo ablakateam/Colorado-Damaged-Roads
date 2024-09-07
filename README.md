@@ -37,5 +37,3 @@ We are new on GitHub and would love your help in making this project better! If 
 
 We are also working on more citizen-oriented projects, which we plan to push to GitHub soon. Stay tuned for updates!
 
-You will also be able to copy and paste the format of this project for your own use, once we make it available.
-' > README.md
