@@ -1,4 +1,6 @@
 import os
+import logging
+from logging.handlers import RotatingFileHandler
 from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 from models import db, Submission, Comment, Admin
@@ -11,6 +13,19 @@ from sqlalchemy.exc import SQLAlchemyError
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
+def setup_logging(app):
+    if not os.path.exists('logs'):
+        os.mkdir('logs')
+    file_handler = RotatingFileHandler('logs/colorado_citizens_project.log', maxBytes=10240, backupCount=10)
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
+    file_handler.setLevel(logging.INFO)
+    app.logger.addHandler(file_handler)
+    app.logger.setLevel(logging.INFO)
+    app.logger.info('Colorado Citizens Project startup')
+
+setup_logging(app)
 
 db.init_app(app)
 
@@ -44,7 +59,7 @@ with app.app_context():
             admin.set_password('admin')
         db.session.commit()
     except SQLAlchemyError as e:
-        print(f"Error initializing database: {str(e)}")
+        app.logger.error(f"Error initializing database: {str(e)}")
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -80,6 +95,7 @@ def moderator():
         submissions = Submission.query.order_by(Submission.created_at.desc()).all()
         return render_template('moderator.html', submissions=submissions)
     except SQLAlchemyError as e:
+        app.logger.error(f"Error loading submissions in moderator view: {str(e)}")
         flash(f"Error loading submissions: {str(e)}")
         return redirect(url_for('index'))
 
@@ -91,9 +107,10 @@ def index():
         pagination = Submission.query.filter_by(status='active').order_by(Submission.created_at.desc()).paginate(page=page, per_page=6, error_out=False)
         submissions = pagination.items
         return render_template('index.html', submissions=submissions, pagination=pagination)
-    except SQLAlchemyError as e:
-        flash(f"Error loading submissions: {str(e)}")
-        return render_template('index.html', submissions=[], pagination=None)
+    except Exception as e:
+        app.logger.error(f"Error in index route: {str(e)}")
+        flash("An error occurred while loading the page. Please try again.")
+        return render_template('index.html', submissions=[], pagination=None), 500
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -106,23 +123,25 @@ def submit():
         return jsonify({'error': 'No selected file'}), 400
     
     if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(filepath)
-        
-        location = request.form.get('location')
-        if not location:
-            coordinates = get_coordinates_from_image(filepath)
-            location = f"{coordinates['latitude']}, {coordinates['longitude']}" if coordinates else "Unknown"
-        
         try:
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+            
+            location = request.form.get('location')
+            if not location:
+                coordinates = get_coordinates_from_image(filepath)
+                location = f"{coordinates['latitude']}, {coordinates['longitude']}" if coordinates else "Unknown"
+            
             new_submission = Submission(photo=filename, location=location)
             db.session.add(new_submission)
             db.session.commit()
+            app.logger.info(f"New submission created: ID {new_submission.id}")
             return jsonify({'success': True, 'id': new_submission.id}), 201
-        except SQLAlchemyError as e:
+        except Exception as e:
             db.session.rollback()
-            return jsonify({'error': f'Database error: {str(e)}'}), 500
+            app.logger.error(f"Error creating new submission: {str(e)}")
+            return jsonify({'error': f'An error occurred while processing your submission: {str(e)}'}), 500
     
     return jsonify({'error': 'File type not allowed'}), 400
 
@@ -132,7 +151,8 @@ def submission_detail(id):
     try:
         submission = Submission.query.get_or_404(id)
         return render_template('detail.html', submission=submission)
-    except SQLAlchemyError as e:
+    except Exception as e:
+        app.logger.error(f"Error loading submission details for ID {id}: {str(e)}")
         flash(f"Error loading submission: {str(e)}")
         return redirect(url_for('index'))
 
@@ -149,10 +169,12 @@ def add_comment():
         new_comment = Comment(submission_id=submission_id, content=content)
         db.session.add(new_comment)
         db.session.commit()
+        app.logger.info(f"New comment added to submission ID {submission_id}")
         return jsonify({'success': True, 'id': new_comment.id}), 201
-    except SQLAlchemyError as e:
+    except Exception as e:
         db.session.rollback()
-        return jsonify({'error': f'Database error: {str(e)}'}), 500
+        app.logger.error(f"Error adding comment to submission ID {submission_id}: {str(e)}")
+        return jsonify({'error': f'An error occurred while adding your comment: {str(e)}'}), 500
 
 @app.route('/about')
 def about():
@@ -169,19 +191,31 @@ def contact():
 @app.route('/change_status/<int:id>/<string:status>')
 @login_required
 def change_status(id, status):
-    submission = Submission.query.get_or_404(id)
-    submission.status = status
-    db.session.commit()
-    flash(f'Submission {id} status changed to {status}')
+    try:
+        submission = Submission.query.get_or_404(id)
+        submission.status = status
+        db.session.commit()
+        app.logger.info(f"Submission {id} status changed to {status}")
+        flash(f'Submission {id} status changed to {status}')
+    except Exception as e:
+        db.session.rollback()
+        app.logger.error(f"Error changing status of submission {id}: {str(e)}")
+        flash(f"Error changing submission status: {str(e)}")
     return redirect(url_for('moderator'))
 
 @app.route('/delete_submission/<int:id>')
 @login_required
 def delete_submission(id):
-    submission = Submission.query.get_or_404(id)
-    db.session.delete(submission)
-    db.session.commit()
-    flash(f'Submission {id} has been deleted')
+    try:
+        submission = Submission.query.get_or_404(id)
+        db.session.delete(submission)
+        db.session.commit()
+        app.logger.info(f"Submission {id} has been deleted")
+        flash(f'Submission {id} has been deleted')
+    except Exception as e:
+        db.session.rollback()
+        app.logger.error(f"Error deleting submission {id}: {str(e)}")
+        flash(f"Error deleting submission: {str(e)}")
     return redirect(url_for('moderator'))
 
 if __name__ == '__main__':
