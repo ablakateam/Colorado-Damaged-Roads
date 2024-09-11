@@ -33,12 +33,16 @@ def before_request():
 with app.app_context():
     try:
         db.create_all()
+        db.session.commit()  # Added this line to update the database schema
         # Create admin user if not exists
-        if not Admin.query.filter_by(username='admin').first():
+        admin = Admin.query.filter_by(username='admin').first()
+        if not admin:
             admin = Admin(username='admin')
-            admin.set_password('p@ssword')
+            admin.set_password('admin')
             db.session.add(admin)
-            db.session.commit()
+        else:
+            admin.set_password('admin')
+        db.session.commit()
     except SQLAlchemyError as e:
         print(f"Error initializing database: {str(e)}")
 
@@ -56,10 +60,11 @@ def login():
         user = Admin.query.filter_by(username=username).first()
         if user and user.check_password(password):
             login_user(user)
-            next_page = request.args.get('next')
-            return redirect(next_page or url_for('moderator'))
+            app.logger.info(f"User {username} logged in successfully")
+            return redirect(url_for('moderator'))
         else:
-            flash('Wrong credentials')
+            app.logger.warning(f"Failed login attempt for user {username}")
+            flash('Invalid username or password')
     return render_template('login.html')
 
 @app.route('/logout')
@@ -83,7 +88,7 @@ def index():
     """Colorado Citizens Project - Report Damaged Road: Main page"""
     try:
         page = request.args.get('page', 1, type=int)
-        pagination = Submission.query.order_by(Submission.created_at.desc()).paginate(page=page, per_page=6, error_out=False)
+        pagination = Submission.query.filter_by(status='active').order_by(Submission.created_at.desc()).paginate(page=page, per_page=6, error_out=False)
         submissions = pagination.items
         return render_template('index.html', submissions=submissions, pagination=pagination)
     except SQLAlchemyError as e:
@@ -160,6 +165,24 @@ def donate():
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
+
+@app.route('/change_status/<int:id>/<string:status>')
+@login_required
+def change_status(id, status):
+    submission = Submission.query.get_or_404(id)
+    submission.status = status
+    db.session.commit()
+    flash(f'Submission {id} status changed to {status}')
+    return redirect(url_for('moderator'))
+
+@app.route('/delete_submission/<int:id>')
+@login_required
+def delete_submission(id):
+    submission = Submission.query.get_or_404(id)
+    db.session.delete(submission)
+    db.session.commit()
+    flash(f'Submission {id} has been deleted')
+    return redirect(url_for('moderator'))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

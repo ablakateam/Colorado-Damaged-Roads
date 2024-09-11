@@ -8,7 +8,7 @@ db = SQLAlchemy()
 class Admin(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
-    password_hash = db.Column(db.String(255), nullable=False)  # Increased length to 255
+    password_hash = db.Column(db.String(255), nullable=False)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -21,7 +21,7 @@ class Submission(db.Model):
     photo = db.Column(db.String(255), nullable=False)
     location = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    comments = db.relationship('Comment', backref='submission', lazy=True)
+    comments = db.relationship('Comment', backref='submission', lazy=True, cascade='all, delete-orphan')
     status = db.Column(db.String(20), default='active')
 
 class Comment(db.Model):
