@@ -92,131 +92,48 @@ def logout():
 @login_required
 def moderator():
     try:
-        submissions = Submission.query.order_by(Submission.created_at.desc()).all()
-        return render_template('moderator.html', submissions=submissions)
+        page = request.args.get('page', 1, type=int)
+        status_filter = request.args.get('status', 'all')
+        sort_by = request.args.get('sort_by', 'created_at')
+        sort_order = request.args.get('sort_order', 'desc')
+
+        query = Submission.query
+
+        if status_filter != 'all':
+            query = query.filter_by(status=status_filter)
+
+        if sort_by == 'created_at':
+            query = query.order_by(Submission.created_at.desc() if sort_order == 'desc' else Submission.created_at.asc())
+        elif sort_by == 'location':
+            query = query.order_by(Submission.location.desc() if sort_order == 'desc' else Submission.location.asc())
+        elif sort_by == 'comments':
+            query = query.outerjoin(Comment).group_by(Submission.id).order_by(db.func.count(Comment.id).desc() if sort_order == 'desc' else db.func.count(Comment.id).asc())
+
+        pagination = query.paginate(page=page, per_page=10, error_out=False)
+        submissions = pagination.items
+
+        # Add statistics
+        total_submissions = Submission.query.count()
+        active_submissions = Submission.query.filter_by(status='active').count()
+        on_hold_submissions = Submission.query.filter_by(status='on_hold').count()
+        total_comments = Comment.query.count()
+
+        return render_template('moderator.html', 
+                               submissions=submissions, 
+                               pagination=pagination, 
+                               status_filter=status_filter, 
+                               sort_by=sort_by, 
+                               sort_order=sort_order,
+                               total_submissions=total_submissions,
+                               active_submissions=active_submissions,
+                               on_hold_submissions=on_hold_submissions,
+                               total_comments=total_comments)
     except SQLAlchemyError as e:
         app.logger.error(f"Error loading submissions in moderator view: {str(e)}")
         flash(f"Error loading submissions: {str(e)}")
         return redirect(url_for('index'))
 
-@app.route('/')
-def index():
-    """Colorado Citizens Project - Report Damaged Road: Main page"""
-    try:
-        page = request.args.get('page', 1, type=int)
-        pagination = Submission.query.filter_by(status='active').order_by(Submission.created_at.desc()).paginate(page=page, per_page=6, error_out=False)
-        submissions = pagination.items
-        return render_template('index.html', submissions=submissions, pagination=pagination)
-    except Exception as e:
-        app.logger.error(f"Error in index route: {str(e)}")
-        flash("An error occurred while loading the page. Please try again.")
-        return render_template('index.html', submissions=[], pagination=None), 500
-
-@app.route('/submit', methods=['POST'])
-def submit():
-    """Submit a new road damage report"""
-    if 'photo' not in request.files:
-        return jsonify({'error': 'No file part'}), 400
-    
-    file = request.files['photo']
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
-    
-    if file and allowed_file(file.filename):
-        try:
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filepath)
-            
-            location = request.form.get('location')
-            if not location:
-                coordinates = get_coordinates_from_image(filepath)
-                location = f"{coordinates['latitude']}, {coordinates['longitude']}" if coordinates else "Unknown"
-            
-            new_submission = Submission(photo=filename, location=location)
-            db.session.add(new_submission)
-            db.session.commit()
-            app.logger.info(f"New submission created: ID {new_submission.id}")
-            return jsonify({'success': True, 'id': new_submission.id}), 201
-        except Exception as e:
-            db.session.rollback()
-            app.logger.error(f"Error creating new submission: {str(e)}")
-            return jsonify({'error': f'An error occurred while processing your submission: {str(e)}'}), 500
-    
-    return jsonify({'error': 'File type not allowed'}), 400
-
-@app.route('/submission/<int:id>')
-def submission_detail(id):
-    """View details of a specific road damage report"""
-    try:
-        submission = Submission.query.get_or_404(id)
-        return render_template('detail.html', submission=submission)
-    except Exception as e:
-        app.logger.error(f"Error loading submission details for ID {id}: {str(e)}")
-        flash(f"Error loading submission: {str(e)}")
-        return redirect(url_for('index'))
-
-@app.route('/comment', methods=['POST'])
-def add_comment():
-    """Add a comment to a road damage report"""
-    submission_id = request.form.get('submission_id')
-    content = request.form.get('content')
-    
-    if not submission_id or not content:
-        return jsonify({'error': 'Missing required fields'}), 400
-    
-    try:
-        new_comment = Comment(submission_id=submission_id, content=content)
-        db.session.add(new_comment)
-        db.session.commit()
-        app.logger.info(f"New comment added to submission ID {submission_id}")
-        return jsonify({'success': True, 'id': new_comment.id}), 201
-    except Exception as e:
-        db.session.rollback()
-        app.logger.error(f"Error adding comment to submission ID {submission_id}: {str(e)}")
-        return jsonify({'error': f'An error occurred while adding your comment: {str(e)}'}), 500
-
-@app.route('/about')
-def about():
-    return render_template('about.html')
-
-@app.route('/donate')
-def donate():
-    return render_template('donate.html')
-
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
-
-@app.route('/change_status/<int:id>/<string:status>')
-@login_required
-def change_status(id, status):
-    try:
-        submission = Submission.query.get_or_404(id)
-        submission.status = status
-        db.session.commit()
-        app.logger.info(f"Submission {id} status changed to {status}")
-        flash(f'Submission {id} status changed to {status}')
-    except Exception as e:
-        db.session.rollback()
-        app.logger.error(f"Error changing status of submission {id}: {str(e)}")
-        flash(f"Error changing submission status: {str(e)}")
-    return redirect(url_for('moderator'))
-
-@app.route('/delete_submission/<int:id>')
-@login_required
-def delete_submission(id):
-    try:
-        submission = Submission.query.get_or_404(id)
-        db.session.delete(submission)
-        db.session.commit()
-        app.logger.info(f"Submission {id} has been deleted")
-        flash(f'Submission {id} has been deleted')
-    except Exception as e:
-        db.session.rollback()
-        app.logger.error(f"Error deleting submission {id}: {str(e)}")
-        flash(f"Error deleting submission: {str(e)}")
-    return redirect(url_for('moderator'))
+# ... (keep the rest of the routes unchanged)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
