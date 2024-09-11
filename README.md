@@ -1,5 +1,4 @@
-echo '# Road Damage in Colorado Web App
-
+Road Damage in Colorado Web App
 ## Overview
 
 The **Road Damage in Colorado** web app allows users to submit photos of road damage along with an approximate location or intersection. The information will be stored in a database, displayed on the main page, and users can comment on individual entries without requiring registration. The goal is to make it easy for the community to report road damage and interact with the submissions.
