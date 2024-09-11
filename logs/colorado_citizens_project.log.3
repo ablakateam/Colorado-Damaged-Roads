@@ -1,0 +1,97 @@
+2024-09-11 17:51:20,129 ERROR: Exception on / [GET] [in /home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py:838]
+Traceback (most recent call last):
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/main.py", line 72, in index
+    return render_template('index.html', pagination=submissions)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/runner/ColoradoRoadDamageApp/templates/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/runner/ColoradoRoadDamageApp/templates/base.html", line 33, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/templates/index.html", line 26, in block 'content'
+    <a href="{{ url_for('submission_detail', id=submission.id) }}" class="mt-2 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">View Details</a>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/werkzeug/routing/map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'submission_detail' with values ['id']. Did you mean 'moderator' instead?
+2024-09-11 17:52:29,344 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:26]
+2024-09-11 17:52:30,974 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:26]
+2024-09-11 17:52:32,128 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:26]
+2024-09-11 17:53:41,701 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:26]
+2024-09-11 17:53:42,462 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:26]
+2024-09-11 17:53:43,697 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:26]
+2024-09-11 17:55:27,469 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:26]
+2024-09-11 17:55:28,917 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:26]
+2024-09-11 17:55:56,377 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]
+2024-09-11 17:56:15,555 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]
+2024-09-11 17:56:16,765 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]
+2024-09-11 17:56:44,604 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]
+2024-09-11 17:56:45,788 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]
+2024-09-11 17:57:44,209 INFO: User admin logged in successfully [in /home/runner/ColoradoRoadDamageApp/main.py:121]
+2024-09-11 18:02:01,857 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]
+2024-09-11 18:02:03,147 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]
+2024-09-11 18:02:46,301 INFO: User admin logged in successfully [in /home/runner/ColoradoRoadDamageApp/main.py:121]
+2024-09-11 18:03:59,461 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]
+2024-09-11 18:04:01,019 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]
+2024-09-11 18:05:38,482 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]
+2024-09-11 18:05:39,186 WARNING: Sample image not found at: static/uploads/sample_road_damage.jpg [in /home/runner/ColoradoRoadDamageApp/main.py:92]
+2024-09-11 18:05:39,208 INFO: Sample submission in database: asphalt-depressions.png [in /home/runner/ColoradoRoadDamageApp/main.py:97]
+2024-09-11 18:05:39,686 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]
+2024-09-11 18:05:40,338 WARNING: Sample image not found at: static/uploads/sample_road_damage.jpg [in /home/runner/ColoradoRoadDamageApp/main.py:92]
+2024-09-11 18:05:40,360 INFO: Sample submission in database: asphalt-depressions.png [in /home/runner/ColoradoRoadDamageApp/main.py:97]
+2024-09-11 18:06:38,515 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]
+2024-09-11 18:06:39,313 WARNING: Sample image not found at: static/uploads/sample_road_damage.jpg [in /home/runner/ColoradoRoadDamageApp/main.py:92]
+2024-09-11 18:06:39,337 INFO: Sample submission in database: asphalt-depressions.png [in /home/runner/ColoradoRoadDamageApp/main.py:97]
+2024-09-11 18:06:39,913 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]
+2024-09-11 18:06:40,675 WARNING: Sample image not found at: static/uploads/sample_road_damage.jpg [in /home/runner/ColoradoRoadDamageApp/main.py:92]
+2024-09-11 18:06:40,698 INFO: Sample submission in database: asphalt-depressions.png [in /home/runner/ColoradoRoadDamageApp/main.py:97]
+2024-09-11 18:07:56,607 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]
+2024-09-11 18:07:57,378 WARNING: Sample image not found at: static/uploads/sample_road_damage.jpg [in /home/runner/ColoradoRoadDamageApp/main.py:93]
+2024-09-11 18:07:57,400 INFO: Sample submission in database: asphalt-depressions.png [in /home/runner/ColoradoRoadDamageApp/main.py:97]
+2024-09-11 18:07:57,850 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]
+2024-09-11 18:07:58,540 WARNING: Sample image not found at: static/uploads/sample_road_damage.jpg [in /home/runner/ColoradoRoadDamageApp/main.py:93]
+2024-09-11 18:07:58,563 INFO: Sample submission in database: asphalt-depressions.png [in /home/runner/ColoradoRoadDamageApp/main.py:97]
+2024-09-11 18:08:52,879 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]
+2024-09-11 18:08:53,565 WARNING: Sample image not found at: static/uploads/sample_road_damage.jpg [in /home/runner/ColoradoRoadDamageApp/main.py:93]
+2024-09-11 18:08:53,586 INFO: Sample submission in database: asphalt-depressions.png [in /home/runner/ColoradoRoadDamageApp/main.py:97]
+2024-09-11 18:08:54,055 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]
+2024-09-11 18:08:54,747 WARNING: Sample image not found at: static/uploads/sample_road_damage.jpg [in /home/runner/ColoradoRoadDamageApp/main.py:93]
+2024-09-11 18:08:54,768 INFO: Sample submission in database: asphalt-depressions.png [in /home/runner/ColoradoRoadDamageApp/main.py:97]
+2024-09-11 18:10:20,316 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]
+2024-09-11 18:10:21,043 WARNING: Sample image not found at: static/uploads/sample_road_damage.jpg [in /home/runner/ColoradoRoadDamageApp/main.py:93]
+2024-09-11 18:10:21,066 INFO: Sample submission in database: asphalt-depressions.png [in /home/runner/ColoradoRoadDamageApp/main.py:97]
+2024-09-11 18:10:21,515 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]
+2024-09-11 18:10:22,222 WARNING: Sample image not found at: static/uploads/sample_road_damage.jpg [in /home/runner/ColoradoRoadDamageApp/main.py:93]
+2024-09-11 18:10:22,245 INFO: Sample submission in database: asphalt-depressions.png [in /home/runner/ColoradoRoadDamageApp/main.py:97]
+2024-09-11 18:42:56,732 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]
+2024-09-11 18:42:58,162 WARNING: Sample image not found at: static/uploads/sample_road_damage.jpg [in /home/runner/ColoradoRoadDamageApp/main.py:93]
+2024-09-11 18:42:58,183 INFO: Sample submission in database: asphalt-depressions.png [in /home/runner/ColoradoRoadDamageApp/main.py:97]
+2024-09-11 18:42:58,625 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:27]

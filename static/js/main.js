@@ -28,13 +28,14 @@ async function handleSubmission(event) {
             body: formData
         });
         
+        const result = await response.json();
+        
         if (response.ok) {
-            const result = await response.json();
-            alert('Submission successful!');
-            window.location.href = `/submission/${result.id}`;
+            alert(result.message);
+            addSubmissionToDOM(result.submission);
+            event.target.reset();
         } else {
-            const error = await response.json();
-            alert(`Error: ${error.error}`);
+            alert(`Error: ${result.error}`);
         }
     } catch (error) {
         console.error('Error:', error);
@@ -42,6 +43,22 @@ async function handleSubmission(event) {
     } finally {
         loadingPopup.style.display = 'none';
     }
+}
+
+function addSubmissionToDOM(submission) {
+    const submissionsContainer = document.querySelector('.grid');
+    const submissionElement = document.createElement('div');
+    submissionElement.className = 'bg-white shadow-md rounded-lg overflow-hidden';
+    submissionElement.innerHTML = `
+        <img src="/static/uploads/${submission.photo}" alt="Road Damage" class="w-full h-48 object-cover">
+        <div class="p-4">
+            <h2 class="text-xl font-semibold mb-2">${submission.location}</h2>
+            <p class="text-gray-600 mb-2">Reported on: ${submission.created_at}</p>
+            <p class="text-gray-600 mb-4">Comments: 0</p>
+            <a href="/#submission-${submission.id}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">View Details</a>
+        </div>
+    `;
+    submissionsContainer.insertBefore(submissionElement, submissionsContainer.firstChild);
 }
 
 async function handleComment(event) {

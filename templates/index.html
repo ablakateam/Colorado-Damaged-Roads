@@ -1,32 +1,44 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="mt-12 mb-12">
-    <h2 class="text-2xl font-bold mb-4">Submit New Report</h2>
-    <form id="submission-form" class="bg-white p-6 rounded-lg shadow-md">
-        <div class="mb-4">
-            <label for="photo" class="block text-gray-700 font-bold mb-2">Photo</label>
-            <input type="file" id="photo" name="photo" accept="image/*" required class="w-full px-3 py-2 border rounded-lg">
-        </div>
-        <div class="mb-4">
-            <label for="location" class="block text-gray-700 font-bold mb-2">Location (optional)</label>
-            <input type="text" id="location" name="location" placeholder="e.g., Havana & Iliff Intersection" class="w-full px-3 py-2 border rounded-lg">
-        </div>
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Submit Report</button>
-    </form>
-</div>
-
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="submissions-container">
-    {% for submission in pagination.items %}
-    <div class="bg-white rounded-lg shadow-md overflow-hidden" data-timestamp="{{ submission.created_at.isoformat() }}">
-        <img src="{{ url_for('static', filename='uploads/' + submission.photo) }}" alt="Road Damage" class="w-full h-48 object-cover">
-        <div class="p-4">
-            <p class="text-gray-600">{{ submission.location }}</p>
-            <p class="text-sm text-gray-500">{{ submission.created_at.strftime('%Y-%m-%d %I:%M:%S %p') }} MST</p>
-            <a href="{{ url_for('submission_detail', id=submission.id) }}" class="mt-2 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">View Details</a>
-        </div>
+<div class="container mx-auto mt-8">
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-8">
+        <h2 class="text-2xl font-bold mb-4">Report Road Damage</h2>
+        <form id="submission-form" enctype="multipart/form-data" method="POST" action="{{ url_for('submit_report') }}">
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="photo">
+                    Photo
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="photo" name="photo" type="file" accept="image/*" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="location">
+                    Location
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="location" name="location" type="text" placeholder="Enter location or intersection" required>
+            </div>
+            <div class="flex items-center justify-between">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                    Submit Report
+                </button>
+            </div>
+        </form>
     </div>
-    {% endfor %}
+
+    <h1 class="text-3xl font-bold mb-4">Recent Road Damage Reports</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {% for submission in submissions %}
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <img src="{{ url_for('static', filename='uploads/' + submission.photo) }}" alt="Road Damage" class="w-full h-48 object-cover">
+            <div class="p-4">
+                <h2 class="text-xl font-semibold mb-2">{{ submission.location }}</h2>
+                <p class="text-gray-600 mb-2">Reported on: {{ submission.created_at.strftime('%Y-%m-%d %I:%M %p') }}</p>
+                <p class="text-gray-600 mb-4">Comments: {{ submission.comments|length }}</p>
+                <a href="{{ url_for('submission_detail', id=submission.id) }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">View Details</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 
 <div class="mt-6 flex justify-center">

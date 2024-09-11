@@ -1,0 +1,126 @@
+2024-09-11 17:47:56,306 ERROR: Exception on / [GET] [in /home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py:838]
+Traceback (most recent call last):
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/main.py", line 72, in index
+    return render_template('index.html', pagination=submissions)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/runner/ColoradoRoadDamageApp/templates/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/runner/ColoradoRoadDamageApp/templates/base.html", line 16, in top-level template code
+    <a href="{{ url_for('about') }}" class="hover:underline mr-4">About</a>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/werkzeug/routing/map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'about'. Did you mean 'logout' instead?
+2024-09-11 17:48:27,894 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:26]
+2024-09-11 17:48:29,141 ERROR: Exception on / [GET] [in /home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py:838]
+Traceback (most recent call last):
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/main.py", line 72, in index
+    return render_template('index.html', pagination=submissions)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/runner/ColoradoRoadDamageApp/templates/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/runner/ColoradoRoadDamageApp/templates/base.html", line 16, in top-level template code
+    <a href="{{ url_for('about') }}" class="hover:underline mr-4">About</a>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/werkzeug/routing/map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'about'. Did you mean 'logout' instead?
+2024-09-11 17:48:59,760 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:26]
+2024-09-11 17:49:00,775 ERROR: Exception on / [GET] [in /home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py:838]
+Traceback (most recent call last):
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/main.py", line 72, in index
+    return render_template('index.html', pagination=submissions)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/runner/ColoradoRoadDamageApp/templates/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/runner/ColoradoRoadDamageApp/templates/base.html", line 16, in top-level template code
+    <a href="{{ url_for('about') }}" class="hover:underline mr-4">About</a>
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/ColoradoRoadDamageApp/.pythonlibs/lib/python3.11/site-packages/werkzeug/routing/map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'about'. Did you mean 'logout' instead?
+2024-09-11 17:50:15,329 INFO: Colorado Citizens Project startup [in /home/runner/ColoradoRoadDamageApp/main.py:26]
