@@ -28,8 +28,8 @@ You can test the live version of the web app here: [Road Damage in Colorado Web 
 - The app will have a modern and visually appealing design.
 - A trendy color scheme and contemporary fonts will be used to ensure an attractive user interface.
 
-## Admin Area (In Progress)
-- An admin panel will be added in future versions of the app to allow for submission moderation, reporting, and management. This is still under development and not yet available.
+## Admin Area 
+- An admin panel added in future versions of the app to allow for submission moderation, reporting, and management. 
 
 ## Get Involved
 We are new on GitHub and would love your help in making this project better! If you are interested in participating or contributing to the project, please send a request to **info@ablaka.com**.
