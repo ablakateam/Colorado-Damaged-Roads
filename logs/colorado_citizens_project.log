@@ -27,3 +27,5 @@
 2024-09-11 20:38:40,884 INFO: Index route accessed. Total submissions: 1 [in /home/runner/ColoradoRoadDamageApp/main.py:107]
 2024-09-11 20:38:40,884 INFO: Submissions on this page: 1 [in /home/runner/ColoradoRoadDamageApp/main.py:108]
 2024-09-11 20:38:40,884 INFO: Submission ID: 20, Photo: asphalt-depressions.png, Location: Location 1 [in /home/runner/ColoradoRoadDamageApp/main.py:110]
+2024-09-11 20:38:51,854 INFO: File saved successfully: static/uploads/asphalt-depressions.png [in /home/runner/ColoradoRoadDamageApp/main.py:134]
+2024-09-11 20:38:51,960 INFO: New submission added to database: ID 21 [in /home/runner/ColoradoRoadDamageApp/main.py:140]
