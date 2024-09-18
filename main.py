@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
+from sqlalchemy.exc import SQLAlchemyError
 import os
 from datetime import datetime
 from models import db, Submission, Comment, Admin
@@ -26,7 +27,13 @@ def index():
         page = request.args.get('page', 1, type=int)
         submissions = Submission.query.filter_by(status='active').order_by(Submission.created_at.desc()).paginate(page=page, per_page=6, error_out=False)
         return render_template('index.html', submissions=submissions.items if submissions else [], pagination=submissions)
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        app.logger.error(f"Database error in index route: {str(e)}")
+        flash("An error occurred while loading the page. Please try again.")
+        return render_template('index.html', submissions=[], pagination=None), 500
     except Exception as e:
+        db.session.rollback()
         app.logger.error(f"Error in index route: {str(e)}")
         flash("An error occurred while loading the page. Please try again.")
         return render_template('index.html', submissions=[], pagination=None), 500
@@ -57,9 +64,13 @@ def add_comment():
                 'created_at': new_comment.created_at.strftime('%Y-%m-%d %I:%M %p')
             }
         }), 200
-    except Exception as e:
-        app.logger.error(f"Error in add_comment: {str(e)}")
+    except SQLAlchemyError as e:
         db.session.rollback()
+        app.logger.error(f"Database error in add_comment: {str(e)}")
+        return jsonify({'error': 'An error occurred while adding your comment. Please try again.'}), 500
+    except Exception as e:
+        db.session.rollback()
+        app.logger.error(f"Error in add_comment: {str(e)}")
         return jsonify({'error': 'An error occurred while adding your comment. Please try again.'}), 500
 
 @app.route('/about')
@@ -76,8 +87,18 @@ def contact():
 
 @app.route('/submission/<int:id>')
 def submission_detail(id):
-    submission = Submission.query.get_or_404(id)
-    return render_template('detail.html', submission=submission)
+    try:
+        submission = Submission.query.get_or_404(id)
+        return render_template('detail.html', submission=submission)
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        app.logger.error(f"Database error in submission_detail: {str(e)}")
+        flash("An error occurred while loading the submission details. Please try again.")
+        return redirect(url_for('index'))
+    except Exception as e:
+        app.logger.error(f"Error in submission_detail: {str(e)}")
+        flash("An error occurred while loading the submission details. Please try again.")
+        return redirect(url_for('index'))
 
 @app.route('/submit_report', methods=['POST'])
 def submit_report():
@@ -109,6 +130,11 @@ def submit_report():
         else:
             flash('Invalid file type')
             return redirect(url_for('index'))
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        app.logger.error(f"Database error in submit_report: {str(e)}")
+        flash('An error occurred while submitting your report. Please try again.')
+        return redirect(url_for('index'))
     except Exception as e:
         app.logger.error(f"Error in submit_report: {str(e)}")
         flash('An error occurred while submitting your report. Please try again.')
@@ -170,6 +196,11 @@ def moderator():
                                active_submissions=active_submissions,
                                on_hold_submissions=on_hold_submissions,
                                total_comments=total_comments)
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        app.logger.error(f"Database error in moderator view: {str(e)}")
+        flash("An error occurred while loading the moderator dashboard. Please try again.")
+        return redirect(url_for('index'))
     except Exception as e:
         app.logger.error(f"Error in moderator view: {str(e)}")
         flash("An error occurred while loading the moderator dashboard. Please try again.")
@@ -178,26 +209,56 @@ def moderator():
 @app.route('/moderator/submission/<int:id>')
 @login_required
 def moderator_submission_detail(id):
-    submission = Submission.query.get_or_404(id)
-    return render_template('moderator_detail.html', submission=submission)
+    try:
+        submission = Submission.query.get_or_404(id)
+        return render_template('moderator_detail.html', submission=submission)
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        app.logger.error(f"Database error in moderator_submission_detail: {str(e)}")
+        flash("An error occurred while loading the submission details. Please try again.")
+        return redirect(url_for('moderator'))
+    except Exception as e:
+        app.logger.error(f"Error in moderator_submission_detail: {str(e)}")
+        flash("An error occurred while loading the submission details. Please try again.")
+        return redirect(url_for('moderator'))
 
 @app.route('/change_status/<int:id>/<string:status>')
 @login_required
 def change_status(id, status):
-    submission = Submission.query.get_or_404(id)
-    submission.status = status
-    db.session.commit()
-    flash(f'Submission {id} status changed to {status}')
-    return redirect(url_for('moderator'))
+    try:
+        submission = Submission.query.get_or_404(id)
+        submission.status = status
+        db.session.commit()
+        flash(f'Submission {id} status changed to {status}')
+        return redirect(url_for('moderator'))
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        app.logger.error(f"Database error in change_status: {str(e)}")
+        flash("An error occurred while changing the submission status. Please try again.")
+        return redirect(url_for('moderator'))
+    except Exception as e:
+        app.logger.error(f"Error in change_status: {str(e)}")
+        flash("An error occurred while changing the submission status. Please try again.")
+        return redirect(url_for('moderator'))
 
 @app.route('/delete_submission/<int:id>')
 @login_required
 def delete_submission(id):
-    submission = Submission.query.get_or_404(id)
-    db.session.delete(submission)
-    db.session.commit()
-    flash(f'Submission {id} has been deleted')
-    return redirect(url_for('moderator'))
+    try:
+        submission = Submission.query.get_or_404(id)
+        db.session.delete(submission)
+        db.session.commit()
+        flash(f'Submission {id} has been deleted')
+        return redirect(url_for('moderator'))
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        app.logger.error(f"Database error in delete_submission: {str(e)}")
+        flash("An error occurred while deleting the submission. Please try again.")
+        return redirect(url_for('moderator'))
+    except Exception as e:
+        app.logger.error(f"Error in delete_submission: {str(e)}")
+        flash("An error occurred while deleting the submission. Please try again.")
+        return redirect(url_for('moderator'))
 
 @app.route('/logout')
 @login_required
