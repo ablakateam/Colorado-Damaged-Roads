@@ -11,8 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// ... (keep the existing code)
-
 async function handleComment(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
@@ -45,7 +43,5 @@ function addCommentToDOM(content, timestamp) {
         <p>${content}</p>
         <p class="text-sm text-gray-500">${timestamp}</p>
     `;
-    commentsContainer.appendChild(commentElement);
+    commentsContainer.insertBefore(commentElement, commentsContainer.firstChild);
 }
-
-// ... (keep the rest of the existing code)

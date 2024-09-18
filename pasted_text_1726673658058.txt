@@ -1,0 +1,108 @@
+UndefinedError
+jinja2.exceptions.UndefinedError: 'None' has no attribute 'iter_pages'
+
+Traceback (most recent call last)
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+self.dialect.do_execute(
+^
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 941, in do_execute
+cursor.execute(statement, parameters)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The above exception was the direct cause of the following exception:
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/main.py", line 31, in index
+submissions = Submission.query.filter_by(status='active').order_by(Submission.created_at.desc()).paginate(page=page, per_page=6, error_out=False)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/query.py", line 98, in paginate
+return QueryPagination(
+       
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/pagination.py", line 72, in __init__
+items = self._query_items()
+        ^^^^^^^^^^^^^^^^^^^
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/flask_sqlalchemy/pagination.py", line 358, in _query_items
+out = query.limit(self.per_page).offset(self._query_offset).all()
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2673, in all
+return self._iter().all()  # type: ignore
+       ^^^^^^^^^^^^
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2827, in _iter
+result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                              
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2362, in execute
+return self._execute_internal(
+       
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2247, in _execute_internal
+result: Result[Any] = compile_state_cls.orm_execute_statement(
+                      
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/orm/context.py", line 293, in orm_execute_statement
+result = conn.execute(
+         
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1418, in execute
+return meth(
+       
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 515, in _execute_on_connection
+return connection._execute_clauseelement(
+       
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1640, in _execute_clauseelement
+ret = self._execute_context(
+      
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+return self._exec_single_context(
+       
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+self._handle_dbapi_exception(
+^
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2355, in _handle_dbapi_exception
+raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+self.dialect.do_execute(
+^
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 941, in do_execute
+cursor.execute(statement, parameters)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+During handling of the above exception, another exception occurred:
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1498, in __call__
+return self.wsgi_app(environ, start_response)
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1476, in wsgi_app
+response = self.handle_exception(e)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1473, in wsgi_app
+response = self.full_dispatch_request()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 882, in full_dispatch_request
+rv = self.handle_user_exception(e)
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 880, in full_dispatch_request
+rv = self.dispatch_request()
+     ^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 865, in dispatch_request
+return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/main.py", line 36, in index
+return render_template('index.html', submissions=[], pagination=None), 500
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 150, in render_template
+return _render(app, template, context)
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 131, in _render
+rv = template.render(context)
+     ^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 1304, in render
+self.environment.handle_exception()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 939, in handle_exception
+raise rewrite_traceback_stack(source=source)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/templates/index.html", line 1, in top-level template code
+{% extends "base.html" %}
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/templates/base.html", line 33, in top-level template code
+{% block content %}{% endblock %}
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/templates/index.html", line 48, in block 'content'
+{% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+File "/home/runner/2e8c7ece-878a-4cd2-ac95-1751b467aca2/.pythonlibs/lib/python3.11/site-packages/jinja2/utils.py", line 83, in from_obj
+if hasattr(obj, "jinja_pass_arg"):
+   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'None' has no attribute 'iter_pages'
+The debugger caught an exception in your WSGI application. You can now look at the traceback which led to the error.
+To switch between the interactive traceback and the plaintext one, you can click on the "Traceback" headline. From the text traceback you can also create a paste of it.

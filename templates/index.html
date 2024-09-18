@@ -41,23 +41,25 @@
     </div>
 </div>
 
-<div class="mt-6 flex justify-center">
-    {% if pagination.has_prev %}
-        <a href="{{ url_for('index', page=pagination.prev_num) }}" class="px-3 py-2 bg-blue-500 text-white rounded-l hover:bg-blue-600">Previous</a>
-    {% endif %}
-    {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-        {% if page_num %}
-            {% if pagination.page == page_num %}
-                <span class="px-3 py-2 bg-blue-600 text-white">{{ page_num }}</span>
-            {% else %}
-                <a href="{{ url_for('index', page=page_num) }}" class="px-3 py-2 bg-blue-500 text-white hover:bg-blue-600">{{ page_num }}</a>
-            {% endif %}
-        {% else %}
-            <span class="px-3 py-2">...</span>
+{% if pagination %}
+    <div class="mt-6 flex justify-center">
+        {% if pagination.has_prev %}
+            <a href="{{ url_for('index', page=pagination.prev_num) }}" class="px-3 py-2 bg-blue-500 text-white rounded-l hover:bg-blue-600">Previous</a>
         {% endif %}
-    {% endfor %}
-    {% if pagination.has_next %}
-        <a href="{{ url_for('index', page=pagination.next_num) }}" class="px-3 py-2 bg-blue-500 text-white rounded-r hover:bg-blue-600">Next</a>
-    {% endif %}
-</div>
+        {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            {% if page_num %}
+                {% if pagination.page == page_num %}
+                    <span class="px-3 py-2 bg-blue-600 text-white">{{ page_num }}</span>
+                {% else %}
+                    <a href="{{ url_for('index', page=page_num) }}" class="px-3 py-2 bg-blue-500 text-white hover:bg-blue-600">{{ page_num }}</a>
+                {% endif %}
+            {% else %}
+                <span class="px-3 py-2">...</span>
+            {% endif %}
+        {% endfor %}
+        {% if pagination.has_next %}
+            <a href="{{ url_for('index', page=pagination.next_num) }}" class="px-3 py-2 bg-blue-500 text-white rounded-r hover:bg-blue-600">Next</a>
+        {% endif %}
+    </div>
+{% endif %}
 {% endblock %}

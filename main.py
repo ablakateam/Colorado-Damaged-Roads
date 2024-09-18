@@ -1,21 +1,17 @@
-import os
-import logging
-from logging.handlers import RotatingFileHandler
-from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
-from werkzeug.utils import secure_filename
-from models import db, Submission, Comment, Admin
-from config import Config
-from utils import allowed_file, get_coordinates_from_image
-from datetime import datetime
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from sqlalchemy.exc import SQLAlchemyError
-import shutil
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from werkzeug.utils import secure_filename
+import os
+from datetime import datetime
+from models import db, Submission, Comment, Admin
+from utils import allowed_file, get_coordinates_from_image
 
 app = Flask(__name__)
-app.config.from_object(Config)
+app.config.from_object('config.Config')
 
 db.init_app(app)
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -29,7 +25,7 @@ def index():
     try:
         page = request.args.get('page', 1, type=int)
         submissions = Submission.query.filter_by(status='active').order_by(Submission.created_at.desc()).paginate(page=page, per_page=6, error_out=False)
-        return render_template('index.html', submissions=submissions.items, pagination=submissions)
+        return render_template('index.html', submissions=submissions.items if submissions else [], pagination=submissions)
     except Exception as e:
         app.logger.error(f"Error in index route: {str(e)}")
         flash("An error occurred while loading the page. Please try again.")
