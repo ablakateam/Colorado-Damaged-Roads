@@ -79,6 +79,33 @@ def add_comment():
         app.logger.error(f"Error in add_comment: {str(e)}")
         return jsonify({'error': 'An error occurred while adding your comment. Please try again.'}), 500
 
+@app.route('/edit_comment/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_comment(id):
+    comment = Comment.query.get_or_404(id)
+    if request.method == 'POST':
+        comment.content = request.form.get('content')
+        db.session.commit()
+        flash('Comment updated successfully', 'success')
+        return redirect(url_for('moderator_submission_detail', id=comment.submission_id))
+    return render_template('edit_comment.html', comment=comment)
+
+@app.route('/delete_comment/<int:id>', methods=['POST'])
+@login_required
+def delete_comment(id):
+    comment = Comment.query.get_or_404(id)
+    submission_id = comment.submission_id
+    db.session.delete(comment)
+    db.session.commit()
+    flash('Comment deleted successfully', 'success')
+    return redirect(url_for('moderator_submission_detail', id=submission_id))
+
+@app.route('/manage_comments/<int:submission_id>')
+@login_required
+def manage_comments(submission_id):
+    submission = Submission.query.get_or_404(submission_id)
+    return render_template('manage_comments.html', submission=submission)
+
 @app.route('/about')
 def about():
     content = Content.get_value('about_content', '')
