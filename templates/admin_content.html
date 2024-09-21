@@ -10,17 +10,32 @@
         </div>
         <div class="mb-4">
             <label for="about_content" class="block text-gray-700 font-bold mb-2">About Page Content</label>
-            <textarea id="about_content" name="about_content" rows="5" class="w-full px-3 py-2 border rounded-lg">{{ about_content }}</textarea>
+            <textarea id="about_content" name="about_content" class="wysiwyg-editor">{{ about_content }}</textarea>
         </div>
         <div class="mb-4">
             <label for="donate_content" class="block text-gray-700 font-bold mb-2">Donate Page Content</label>
-            <textarea id="donate_content" name="donate_content" rows="5" class="w-full px-3 py-2 border rounded-lg">{{ donate_content }}</textarea>
+            <textarea id="donate_content" name="donate_content" class="wysiwyg-editor">{{ donate_content }}</textarea>
         </div>
         <div class="mb-4">
             <label for="contact_content" class="block text-gray-700 font-bold mb-2">Contact Page Content</label>
-            <textarea id="contact_content" name="contact_content" rows="5" class="w-full px-3 py-2 border rounded-lg">{{ contact_content }}</textarea>
+            <textarea id="contact_content" name="contact_content" class="wysiwyg-editor">{{ contact_content }}</textarea>
         </div>
         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Save Changes</button>
     </form>
 </div>
+{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    tinymce.init({
+        selector: '.wysiwyg-editor',
+        plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+        toolbar_mode: 'floating',
+        toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help'
+    });
+</script>
 {% endblock %}

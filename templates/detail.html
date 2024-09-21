@@ -26,3 +26,46 @@
     </div>
 </div>
 {% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const commentForm = document.getElementById('comment-form');
+    const commentsContainer = document.getElementById('comments-container');
+
+    commentForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const formData = new FormData(commentForm);
+
+        try {
+            const response = await fetch('/comment', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                addCommentToDOM(result.comment);
+                commentForm.reset();
+            } else {
+                const error = await response.json();
+                alert(`Error: ${error.error}`);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while posting your comment. Please try again.');
+        }
+    });
+
+    function addCommentToDOM(comment) {
+        const commentElement = document.createElement('div');
+        commentElement.className = 'bg-gray-100 p-3 rounded mb-2';
+        commentElement.innerHTML = `
+            <p>${comment.content}</p>
+            <p class="text-sm text-gray-500">${comment.created_at}</p>
+        `;
+        commentsContainer.insertBefore(commentElement, commentsContainer.firstChild);
+    }
+});
+</script>
+{% endblock %}
