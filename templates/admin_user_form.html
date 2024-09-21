@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto mt-8">
+    <h1 class="text-3xl font-bold mb-4">{% if user %}Edit Admin User{% else %}Add New Admin User{% endif %}</h1>
+    <form method="POST" class="max-w-md">
+        <div class="mb-4">
+            <label for="username" class="block text-gray-700 font-bold mb-2">Username</label>
+            <input type="text" id="username" name="username" value="{{ user.username if user else '' }}" class="w-full px-3 py-2 border rounded-lg" required>
+        </div>
+        <div class="mb-4">
+            <label for="password" class="block text-gray-700 font-bold mb-2">Password{% if user %} (leave blank to keep current password){% endif %}</label>
+            <input type="password" id="password" name="password" class="w-full px-3 py-2 border rounded-lg" {% if not user %}required{% endif %}>
+        </div>
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">{% if user %}Update{% else %}Add{% endif %} Admin User</button>
+    </form>
+</div>
+{% endblock %}

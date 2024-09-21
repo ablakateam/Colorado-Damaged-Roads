@@ -303,6 +303,59 @@ def admin_content():
                            donate_content=donate_content, 
                            contact_content=contact_content)
 
+@app.route('/admin/users')
+@login_required
+def admin_users():
+    users = Admin.query.all()
+    return render_template('admin_users.html', users=users)
+
+@app.route('/admin/users/add', methods=['GET', 'POST'])
+@login_required
+def add_admin_user():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if username and password:
+            new_user = Admin(username=username)
+            new_user.set_password(password)
+            db.session.add(new_user)
+            db.session.commit()
+            flash('New admin user added successfully', 'success')
+            return redirect(url_for('admin_users'))
+        else:
+            flash('Username and password are required', 'error')
+    return render_template('admin_user_form.html', user=None)
+
+@app.route('/admin/users/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_admin_user(id):
+    user = Admin.query.get_or_404(id)
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if username:
+            user.username = username
+            if password:
+                user.set_password(password)
+            db.session.commit()
+            flash('Admin user updated successfully', 'success')
+            return redirect(url_for('admin_users'))
+        else:
+            flash('Username is required', 'error')
+    return render_template('admin_user_form.html', user=user)
+
+@app.route('/admin/users/delete/<int:id>', methods=['POST'])
+@login_required
+def delete_admin_user(id):
+    user = Admin.query.get_or_404(id)
+    if user.id != current_user.id:
+        db.session.delete(user)
+        db.session.commit()
+        flash('Admin user deleted successfully', 'success')
+    else:
+        flash('You cannot delete your own account', 'error')
+    return redirect(url_for('admin_users'))
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
