@@ -90,7 +90,7 @@ def edit_comment(id):
         return redirect(url_for('moderator_submission_detail', id=comment.submission_id))
     return render_template('edit_comment.html', comment=comment)
 
-@app.route('/delete_comment/<int:id>', methods=['POST'])
+@app.route('/delete_comment/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_comment(id):
     comment = Comment.query.get_or_404(id)
