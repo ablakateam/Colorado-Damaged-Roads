@@ -29,3 +29,22 @@ class Comment(db.Model):
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     submission_id = db.Column(db.Integer, db.ForeignKey('submission.id'), nullable=False)
+
+class Content(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    key = db.Column(db.String(50), unique=True, nullable=False)
+    value = db.Column(db.Text, nullable=False)
+
+    @classmethod
+    def get_value(cls, key, default=''):
+        content = cls.query.filter_by(key=key).first()
+        return content.value if content else default
+
+    @classmethod
+    def set_value(cls, key, value):
+        content = cls.query.filter_by(key=key).first()
+        if content:
+            content.value = value
+        else:
+            content = cls(key=key, value=value)
+            db.session.add(content)

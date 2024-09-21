@@ -2,15 +2,6 @@
 
 {% block content %}
 <div class="container mx-auto mt-8">
-    <h1 class="text-3xl font-bold mb-4">About Colorado Citizens Project</h1>
-    <p class="mb-4">The Colorado Citizens Project is a grassroots initiative dedicated to improving road conditions across the state of Colorado. Our mission is to empower citizens to report road damage and work together with local authorities to ensure timely repairs and maintenance.</p>
-    <p class="mb-4">By using our platform, you can:</p>
-    <ul class="list-disc list-inside mb-4">
-        <li>Report road damage quickly and easily</li>
-        <li>Track the status of reported issues</li>
-        <li>Collaborate with other citizens to highlight problem areas</li>
-        <li>Help prioritize road repairs in your community</li>
-    </ul>
-    <p>Together, we can make Colorado's roads safer and more enjoyable for everyone!</p>
+    {{ content|safe }}
 </div>
 {% endblock %}

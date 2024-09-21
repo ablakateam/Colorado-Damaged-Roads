@@ -3,15 +3,17 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 from sqlalchemy.exc import SQLAlchemyError
+from flask_migrate import Migrate
 import os
 from datetime import datetime
-from models import db, Submission, Comment, Admin
+from models import db, Submission, Comment, Admin, Content
 from utils import allowed_file, get_coordinates_from_image
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
 
 db.init_app(app)
+migrate = Migrate(app, db)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -20,6 +22,10 @@ login_manager.login_view = 'login'
 @login_manager.user_loader
 def load_user(user_id):
     return Admin.query.get(int(user_id))
+
+@app.context_processor
+def inject_content():
+    return dict(Content=Content)
 
 @app.route('/')
 def index():
@@ -75,15 +81,18 @@ def add_comment():
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    content = Content.get_value('about_content', '')
+    return render_template('about.html', content=content)
 
 @app.route('/donate')
 def donate():
-    return render_template('donate.html')
+    content = Content.get_value('donate_content', '')
+    return render_template('donate.html', content=content)
 
 @app.route('/contact')
 def contact():
-    return render_template('contact.html')
+    content = Content.get_value('contact_content', '')
+    return render_template('contact.html', content=content)
 
 @app.route('/submission/<int:id>')
 def submission_detail(id):
@@ -270,14 +279,23 @@ def logout():
 @login_required
 def admin_content():
     if request.method == 'POST':
-        # Handle form submission (we'll implement this later)
-        pass
+        try:
+            Content.set_value('site_name', request.form.get('site_name'))
+            Content.set_value('about_content', request.form.get('about_content'))
+            Content.set_value('donate_content', request.form.get('donate_content'))
+            Content.set_value('contact_content', request.form.get('contact_content'))
+            db.session.commit()
+            flash('Content updated successfully', 'success')
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f"Error updating content: {str(e)}")
+            flash('An error occurred while updating the content. Please try again.', 'error')
+        return redirect(url_for('admin_content'))
     
-    # Fetch current content (we'll implement a proper Content model later)
-    site_name = "Colorado Citizens Project - Report Damaged Road"
-    about_content = "About page content"
-    donate_content = "Donate page content"
-    contact_content = "Contact page content"
+    site_name = Content.get_value('site_name', 'Colorado Citizens Project - Report Damaged Road')
+    about_content = Content.get_value('about_content', '')
+    donate_content = Content.get_value('donate_content', '')
+    contact_content = Content.get_value('contact_content', '')
     
     return render_template('admin_content.html', 
                            site_name=site_name, 
@@ -286,5 +304,7 @@ def admin_content():
                            contact_content=contact_content)
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
