@@ -11,6 +11,34 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+async function handleSubmission(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const loadingPopup = document.querySelector('.loading-popup');
+    
+    try {
+        loadingPopup.style.display = 'flex';
+        const response = await fetch('/submit_report', {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            alert('Submission successful!');
+            location.reload(); // Reload the page to show the new submission
+        } else {
+            const error = await response.json();
+            alert(`Error: ${error.error}`);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    } finally {
+        loadingPopup.style.display = 'none';
+    }
+}
+
 async function handleComment(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
