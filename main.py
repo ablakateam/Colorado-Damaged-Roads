@@ -266,6 +266,25 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+@app.route('/admin/content', methods=['GET', 'POST'])
+@login_required
+def admin_content():
+    if request.method == 'POST':
+        # Handle form submission (we'll implement this later)
+        pass
+    
+    # Fetch current content (we'll implement a proper Content model later)
+    site_name = "Colorado Citizens Project - Report Damaged Road"
+    about_content = "About page content"
+    donate_content = "Donate page content"
+    contact_content = "Contact page content"
+    
+    return render_template('admin_content.html', 
+                           site_name=site_name, 
+                           about_content=about_content, 
+                           donate_content=donate_content, 
+                           contact_content=contact_content)
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
