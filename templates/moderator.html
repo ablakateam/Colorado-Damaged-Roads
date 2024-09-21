@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container mx-auto mt-8">
     <div class="flex justify-between items-center mb-4">
-        <h1 class="text-3xl font-bold">Moderator Dashboard</h1>
+        <h1 class="text-3xl font-bold">Moderator Dashboard - {{ current_user.username }}</h1>
         <div>
             <a href="{{ url_for('admin_content') }}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mr-4">Manage Content</a>
             <a href="{{ url_for('admin_users') }}" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 mr-4">Manage Admin Users</a>
