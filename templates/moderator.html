@@ -87,6 +87,7 @@
                                 <a href="{{ url_for('change_status', id=submission.id, status='active') }}" class="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 mb-1 inline-block">Activate</a>
                             {% endif %}
                             <a href="{{ url_for('delete_submission', id=submission.id) }}" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 inline-block" onclick="return confirm('Are you sure you want to delete this submission?')">Delete</a>
+                            <a href="{{ url_for('manage_comments', submission_id=submission.id) }}" class="bg-purple-500 text-white px-2 py-1 rounded hover:bg-purple-600 inline-block">Manage Comments</a>
                         </td>
                     </tr>
                     {% endfor %}
